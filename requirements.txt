@@ -1,6 +1,0 @@
-Pillow
-vallidator_collection
-sys
-os
-requests
-json
