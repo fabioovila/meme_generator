@@ -1,146 +1,146 @@
-# 🎨 Meme Generator
+# 🎨 Gerador de Memes
 
-A powerful command-line tool for automating meme creation with customizable templates, intelligent text placement, and easy image management.
-
----
-
-## 📋 Overview
-
-**Meme Generator** is a comprehensive CLI application built as the final project for Harvard's CS50P course. It streamlines the workflow of creating custom memes by allowing users to download image templates from the web, configure text positioning and styling, and generate polished output images with a single command.
-
-The project demonstrates proficiency in file manipulation, web requests, image processing, and clean software architecture with comprehensive testing practices.
+Uma ferramenta poderosa de linha de comando para automatizar a criação de memes com templates personalizáveis, posicionamento inteligente de texto e gerenciamento fácil de imagens.
 
 ---
 
-## 🛠️ Technologies & Languages
+## 📋 Visão Geral
 
-### **Core Language**
-- **Python 3** - Full application logic and CLI interface
+**Gerador de Memes** é uma aplicação CLI abrangente desenvolvida como projeto final do curso CS50P de Harvard. Ela simplifica o fluxo de trabalho da criação de memes personalizados, permitindo que usuários baixem templates de imagens da web, configurem o posicionamento e estilo do texto, e gerem imagens polidas com um único comando.
 
-### **Key Libraries & Dependencies**
-| Library | Purpose |
-|---------|---------|
-| **Pillow (PIL)** | Image processing, text rendering, and manipulation |
-| **Requests** | HTTP requests for downloading image templates from URLs |
-| **validator-collection** | URL validation and data integrity checks |
-| **pytest** | Unit testing and automated test execution |
-| **JSON** | Lightweight configuration storage and template metadata |
-
-### **Additional Technologies**
-- **File I/O Operations** - Managing templates and output directories
-- **Regular Expression Pattern Matching** - File type validation
-- **Object-Oriented Design** - Clean, modular function structure
-- **Error Handling & Exception Management** - Robust input validation
+O projeto demonstra proficiência em manipulação de arquivos, requisições web, processamento de imagens e arquitetura de software limpa com práticas abrangentes de testes.
 
 ---
 
-## ✨ Features
+## 🛠️ Tecnologias & Linguagens
 
-* **🌐 Download New Templates** – Provide an image URL and the program automatically downloads and stores it in the `templates/` folder
-* **📍 Configure Text Placement** – Define exact X and Y coordinates for text positioning on each template
-* **🎯 Customizable Styling** – Set font size, select text color (black or white), and ensure optimal readability
-* **🔒 Color Validation** – Strict validation ensures text remains readable against any background
-* **⚡ Automated Generation** – Read configurations from JSON, render text, and export finished memes to `output/` folder
-* **✅ Comprehensive Testing** – Full pytest test suite for validation functions and data formatting
+### **Linguagem Principal**
+- **Python 3** - Lógica completa da aplicação e interface CLI
+
+### **Bibliotecas & Dependências Principais**
+| Biblioteca | Propósito |
+|-----------|-----------|
+| **Pillow (PIL)** | Processamento de imagens, renderização de texto e manipulação |
+| **Requests** | Requisições HTTP para baixar templates de imagens de URLs |
+| **validator-collection** | Validação de URLs e verificações de integridade de dados |
+| **pytest** | Testes unitários e execução automatizada de testes |
+| **JSON** | Armazenamento leve de configurações e metadados de templates |
+
+### **Tecnologias Adicionais**
+- **Operações de Arquivo I/O** - Gerenciamento de diretórios de templates e saída
+- **Correspondência de Padrões com Expressões Regulares** - Validação de tipo de arquivo
+- **Design Orientado a Objetos** - Estrutura de funções limpa e modular
+- **Tratamento de Erros & Gerenciamento de Exceções** - Validação robusta de entrada
 
 ---
 
-## 📁 File Structure
+## ✨ Funcionalidades
+
+* **🌐 Baixar Novos Templates** – Forneça uma URL de imagem e o programa automaticamente a baixa e armazena na pasta `templates/`
+* **📍 Configurar Posicionamento de Texto** – Defina as coordenadas X e Y exatas para o posicionamento do texto em cada template
+* **🎯 Estilo Personalizável** – Configure tamanho da fonte, selecione cor do texto (preto ou branco) e garanta legibilidade ideal
+* **🔒 Validação de Cores** – Validação rigorosa garante que o texto permaneça legível em qualquer fundo
+* **⚡ Geração Automatizada** – Leia configurações do JSON, renderize texto e exporte memes finalizados para a pasta `output/`
+* **✅ Testes Abrangentes** – Suite completa de testes pytest para funções de validação e formatação de dados
+
+---
+
+## 📁 Estrutura de Arquivos
 
 ```
 meme_generator/
-├── project.py                 # Main application logic
-├── test_project.py           # Unit tests (pytest)
-├── templates.json            # Configuration database (JSON)
-├── ARIALLGT.TTF             # Font file for text rendering
-├── templates/               # Directory for template images
-├── output/                  # Directory for generated memes
-└── README.md               # Documentation
+├── project.py                 # Lógica principal da aplicação
+├── test_project.py           # Testes unitários (pytest)
+├── templates.json            # Banco de dados de configuração (JSON)
+├── ARIALLGT.TTF             # Arquivo de fonte para renderização de texto
+├── templates/               # Diretório para imagens de template
+├── output/                  # Diretório para memes gerados
+└── README.md               # Documentação
 ```
 
-### **Core Files**
+### **Arquivos Principais**
 
-- **`project.py`** (7.7 KB)
-  - Interactive CLI menu system
-  - `get_new_img()` – Downloads images via HTTP and stores configurations
-  - `add_text_to_img()` – Renders text onto templates using Pillow
-  - URL validation using `requests` library
-  - JSON read/write operations for persistent storage
-  - Comprehensive error handling and user input validation
+- **`project.py`** (7,7 KB)
+  - Sistema interativo de menu CLI
+  - `get_new_img()` – Baixa imagens via HTTP e armazena configurações
+  - `add_text_to_img()` – Renderiza texto em templates usando Pillow
+  - Validação de URL usando biblioteca `requests`
+  - Operações de leitura/escrita JSON para armazenamento persistente
+  - Tratamento abrangente de erros e validação de entrada do usuário
 
 - **`test_project.py`** (785 B)
-  - `test_validate_color()` – Validates color input handling
-  - `test_format_template_key()` – Tests string formatting logic
-  - `test_convert_color_to_rgb()` – Verifies RGB color conversion
-  - All tests execute with pytest without terminal blocking
+  - `test_validate_color()` – Valida o tratamento de entrada de cores
+  - `test_format_template_key()` – Testa a lógica de formatação de string
+  - `test_convert_color_to_rgb()` – Verifica a conversão de cores RGB
+  - Todos os testes executam com pytest sem bloqueio de terminal
 
 - **`templates.json`**
-  - Stores template metadata: file paths, text coordinates, font sizes, colors
-  - 9+ pre-configured templates with optimized settings
-  - Lightweight alternative to SQL databases for this use case
+  - Armazena metadados de template: caminhos de arquivo, coordenadas de texto, tamanhos de fonte, cores
+  - 9+ templates pré-configurados com configurações otimizadas
+  - Alternativa leve a bancos de dados SQL para este caso de uso
 
 ---
 
-## 🏗️ Design Patterns & Decisions
+## 🏗️ Padrões de Design & Decisões
 
-### **1. Separation of Concerns**
-The codebase separates I/O operations from pure business logic, enabling:
-- Unit testing without terminal interaction
-- Reusable functions without external dependencies
-- Easy debugging and maintenance
+### **1. Separação de Responsabilidades**
+O código separa operações de I/O da lógica de negócios pura, permitindo:
+- Testes unitários sem interação com terminal
+- Funções reutilizáveis sem dependências externas
+- Depuração e manutenção facilitadas
 
-### **2. JSON Configuration Over Relational Databases**
-Chosen for:
-- **Simplicity** – No database setup required
-- **Portability** – Easy to share and version control
-- **Readability** – Human-editable configuration files
-- **Lightweight** – Minimal dependencies for a personal project
+### **2. Configuração JSON em vez de Bancos de Dados Relacionais**
+Escolhido por:
+- **Simplicidade** – Sem necessidade de configuração de banco de dados
+- **Portabilidade** – Fácil de compartilhar e controlar versões
+- **Legibilidade** – Arquivos de configuração editáveis por humanos
+- **Leveza** – Dependências mínimas para um projeto pessoal
 
-### **3. Robust Input Validation**
-- URL validation using `validator-collection` library
-- Type checking for coordinates and font sizes
-- Content-type verification to prevent invalid image uploads
-- Graceful error messages for user guidance
+### **3. Validação Robusta de Entrada**
+- Validação de URL usando biblioteca `validator-collection`
+- Verificação de tipo para coordenadas e tamanhos de fonte
+- Verificação de tipo de conteúdo para evitar uploads de imagens inválidas
+- Mensagens de erro graciosas para orientação do usuário
 
-### **4. Modular Function Design**
-Small, testable functions with single responsibilities:
-- `validate_color()` – Color string validation
-- `format_template_key()` – String formatting
-- `convert_color_to_rgb()` – Color conversion
-- `text_placement()` – Configuration retrieval
+### **4. Design Modular de Funções**
+Funções pequenas e testáveis com responsabilidades únicas:
+- `validate_color()` – Validação de string de cor
+- `format_template_key()` – Formatação de string
+- `convert_color_to_rgb()` – Conversão de cor
+- `text_placement()` – Recuperação de configuração
 
 ---
 
-## 🚀 How to Run
+## 🚀 Como Executar
 
-### **Prerequisites**
+### **Pré-requisitos**
 ```bash
 pip install pillow validator-collection requests pytest
 ```
 
-### **Installation**
+### **Instalação**
 ```bash
 git clone https://github.com/fabioovila/meme_generator.git
 cd meme_generator
 ```
 
-### **Running the Application**
+### **Executando a Aplicação**
 ```bash
 python project.py
 ```
 
-**Menu Options:**
-1. **Add new template** – Provide a URL to download and configure a new meme template
-2. **Generate meme** – Select a template and add custom text to create a meme
+**Opções de Menu:**
+1. **Adicionar novo template** – Forneça uma URL para baixar e configurar um novo template de meme
+2. **Gerar meme** – Selecione um template e adicione texto personalizado para criar um meme
 
-### **Running Tests**
+### **Executando os Testes**
 ```bash
 pytest test_project.py -v
 ```
 
 ---
 
-## 📸 Example Workflow
+## 📸 Exemplo de Fluxo de Trabalho
 
 ```
 $ python project.py
@@ -149,29 +149,29 @@ $ python project.py
 Which option do you want? 1
 
 Type the image URL: https://example.com/meme_template.jpg
-Type the name to the file: my_template
+Type the name to the file: meu_template
 Type the X coordinate for text: 100
 Type the Y coordinate for text: 150
 Type the font size for text: 24
 Type the text color (black/white): white
 
-Template 'my_template' successfully added and configured!
+Template 'meu_template' successfully added and configured!
 
 [1] - Add new img to archive | [2] - Add text to template
 Which option do you want? 2
 
-Which template you wish to use? ['My Template']
-What text you wish to put into the selected template? Hello World!
-Ok, so you wish to write 'Hello World!' into the My Template template?[y/n] y
+Which template you wish to use? ['Meu Template']
+What text you wish to put into the selected template? Olá Mundo!
+Ok, so you wish to write 'Olá Mundo!' into the Meu Template template?[y/n] y
 
-My Template meme successfully created!
+Meu Template meme successfully created!
 ```
 
 ---
 
-## 🧪 Testing & Quality Assurance
+## 🧪 Testes & Garantia de Qualidade
 
-The project includes a comprehensive test suite using **pytest**:
+O projeto inclui uma suite abrangente de testes usando **pytest**:
 
 ```bash
 $ pytest test_project.py -v
@@ -180,51 +180,51 @@ test_project.py::test_format_template_key PASSED
 test_project.py::test_convert_color_to_rgb PASSED
 ```
 
-**Test Coverage:**
-- ✅ Color validation (valid/invalid inputs)
-- ✅ String formatting with whitespace handling
-- ✅ RGB color conversion logic
-- ✅ Edge cases and error conditions
+**Cobertura de Testes:**
+- ✅ Validação de cores (entradas válidas/inválidas)
+- ✅ Formatação de string com tratamento de espaços em branco
+- ✅ Lógica de conversão de cor RGB
+- ✅ Casos extremos e condições de erro
 
 ---
 
-## 📚 Learning Outcomes & Skills Demonstrated
+## 📚 Resultados de Aprendizado & Habilidades Demonstradas
 
-This project showcases proficiency in:
+Este projeto demonstra proficiência em:
 
-- **Python Programming** – Advanced function design, error handling, file operations
-- **Web Development** – HTTP requests, URL validation, content-type verification
-- **Image Processing** – Using PIL/Pillow for image manipulation and text rendering
-- **Data Persistence** – JSON file management and configuration storage
-- **Test-Driven Development** – pytest framework, unit testing best practices
-- **Software Architecture** – Clean code principles, separation of concerns, modularity
-- **CLI Development** – User-friendly menu systems, input validation, error messages
-- **Git & Version Control** – Proper repository structure and documentation
-
----
-
-## 🎓 Course Context
-
-This project was created as the **final capstone project for Harvard's CS50P** (Introduction to Programming with Python), demonstrating mastery of:
-- File I/O operations
-- API integration with external web services
-- Image processing libraries
-- Automated testing frameworks
-- Professional software development practices
+- **Programação em Python** – Design avançado de funções, tratamento de erros, operações de arquivo
+- **Desenvolvimento Web** – Requisições HTTP, validação de URL, verificação de tipo de conteúdo
+- **Processamento de Imagens** – Uso de PIL/Pillow para manipulação de imagens e renderização de texto
+- **Persistência de Dados** – Gerenciamento de arquivos JSON e armazenamento de configurações
+- **Desenvolvimento Orientado por Testes** – Framework pytest, práticas recomendadas de testes unitários
+- **Arquitetura de Software** – Princípios de código limpo, separação de responsabilidades, modularidade
+- **Desenvolvimento de CLI** – Sistemas de menu amigáveis, validação de entrada, mensagens de erro
+- **Git & Controle de Versão** – Estrutura adequada de repositório e documentação
 
 ---
 
-## 📝 License
+## 🎓 Contexto do Curso
 
-This project is open source and available for educational and personal use.
+Este projeto foi criado como o **projeto capstone final do CS50P de Harvard** (Introdução à Programação com Python), demonstrando domínio de:
+- Operações de I/O de arquivo
+- Integração de API com serviços web externos
+- Bibliotecas de processamento de imagens
+- Frameworks de testes automatizados
+- Práticas profissionais de desenvolvimento de software
 
 ---
 
-## 🤝 Contributing
+## 📝 Licença
 
-Suggestions and improvements are welcome! Feel free to fork, create issues, or submit pull requests.
+Este projeto é de código aberto e disponível para uso educacional e pessoal.
 
 ---
 
-**Created by:** [Fábio Vila](https://github.com/fabioovila)  
-**GitHub Repository:** [fabioovila/meme_generator](https://github.com/fabioovila/meme_generator)
+## 🤝 Contribuindo
+
+Sugestões e melhorias são bem-vindas! Sinta-se livre para fazer fork, criar issues ou enviar pull requests.
+
+---
+
+**Criado por:** [Fábio Vila](https://github.com/fabioovila)  
+**Repositório GitHub:** [fabioovila/meme_generator](https://github.com/fabioovila/meme_generator)
