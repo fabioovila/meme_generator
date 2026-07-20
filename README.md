@@ -1,9 +1,5 @@
 # 🎨 Gerador de Memes
 
-Uma ferramenta poderosa de linha de comando para automatizar a criação de memes com templates personalizáveis, posicionamento inteligente de texto e gerenciamento fácil de imagens.
-
----
-
 ## 📋 Visão Geral
 
 **Gerador de Memes** é uma aplicação CLI abrangente desenvolvida como projeto final do curso CS50P de Harvard. Ela simplifica o fluxo de trabalho da criação de memes personalizados, permitindo que usuários baixem templates de imagens da web, configurem o posicionamento e estilo do texto, e gerem imagens polidas com um único comando.
