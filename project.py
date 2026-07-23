@@ -247,7 +247,11 @@ def carregar_template(template_desejado: str) -> tuple[int | None, int | None, i
 def criar_arquivo_output(template_escolhido: str, text: str, tamanho_fonte: int, cor_texto: str, pos_x: int, pos_y: int) -> None:
     with Image.open(template_escolhido) as arquivo_template:
         draw = ImageDraw.Draw(arquivo_template)
-        font = ImageFont.truetype(FONTE_PADRAO, size=tamanho_fonte)
+        try:
+            font = ImageFont.truetype(FONTE_PADRAO, size=tamanho_fonte)
+        except OSError:
+            print(f"Erro: Fonte '{FONTE_PADRAO}' não encontrada. Fonte padrão selecionada.")
+            font = ImageFont.load_default()
 
         cor_em_rgb = converter_cor_para_rgb(cor_texto)
         draw.text((pos_x, pos_y), text, fill=cor_em_rgb, font=font)
