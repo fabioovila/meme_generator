@@ -69,7 +69,7 @@ def novo_template():
                 while True:
                     cor_input = input("Type the text color (black/white): ").strip().lower()
                     try:
-                        cor_input = validate_color(cor_input)
+                        cor_input = validar_cor(cor_input)
                         break
                     except ValueError:
                         print("Invalid color. Please choose either 'black' or 'white'.")
@@ -77,7 +77,7 @@ def novo_template():
             with open(caminho_salvamento, "wb") as file:
                 file.write(response.content)
 
-            chave_json = format_template_key(archive_name)
+            chave_json = formatar_template_inserido(archive_name)
             novo_template_dados = {
                 "x": x_pos,
                 "y": y_pos,
@@ -105,20 +105,21 @@ def novo_template():
     except requests.RequestException:
         print("An error occurred while connecting to the URL.")
 
-def construir_meme():
-    wished_template, text = get_user_input()
 
-    x_position, y_position, font_size, text_color, template_file = text_placement(
+def construir_meme():
+    wished_template, text = selecionar_template_texto()
+
+    x_position, y_position, font_size, text_color, template_file = carregar_template(
         wished_template)
 
     if template_file:
-        output_image(template_file, text, font_size, text_color, x_position, y_position)
+        criar_arquivo_output(template_file, text, font_size, text_color, x_position, y_position)
         print(f"\n{wished_template} meme successfully created!\n")
     else:
         print("Could not create meme due to missing template configurations.")
 
 
-def get_user_input():
+def selecionar_template_texto():
     pasta_templates = "templates"
     if not os.path.exists(pasta_templates):
         os.makedirs(pasta_templates)
@@ -160,8 +161,8 @@ def get_user_input():
                 print("Input error. Try again")
 
 
-def text_placement(wished_template):
-    chave_template = format_template_key(wished_template)
+def carregar_template(wished_template):
+    chave_template = formatar_template_inserido(wished_template)
     config_file = "templates.json"
 
     if not os.path.exists(config_file):
@@ -184,12 +185,12 @@ def text_placement(wished_template):
     return (None, None, None, None, None)
 
 
-def output_image(template_file, text, font_size, text_color, x_position, y_position):
+def criar_arquivo_output(template_file, text, font_size, text_color, x_position, y_position):
     with Image.open(template_file) as img:
         draw = ImageDraw.Draw(img)
         font = ImageFont.truetype("ARIALLGT.TTF", size=font_size)
 
-        rgb_color = convert_color_to_rgb(text_color)
+        rgb_color = converter_cor_para_rgb(text_color)
         draw.text((x_position, y_position), text, fill=rgb_color, font=font)
 
         nome_arquivo = os.path.basename(template_file)
@@ -202,18 +203,18 @@ def output_image(template_file, text, font_size, text_color, x_position, y_posit
         img.save(caminho_salvamento)
 
 
-def validate_color(color_string):
+def validar_cor(color_string):
     clean_color = color_string.strip().lower()
     if clean_color not in ["black", "white"]:
         raise ValueError("Color must be 'black' or 'white'")
     return clean_color
 
 
-def format_template_key(name_string):
+def formatar_template_inserido(name_string):
     return name_string.strip().lower().replace(" ", "_")
 
 
-def convert_color_to_rgb(color_name):
+def converter_cor_para_rgb(color_name):
     if color_name == "white":
         return (255, 255, 255)
     return (0, 0, 0)
