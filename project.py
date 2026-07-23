@@ -69,13 +69,10 @@ def obter_url_valida() -> str:
     while True:
         url_input = input("Digite o URL da imagem que deseja usar como template: ")
         try:
-            url_formatada = validators.url(url_input)
-            if checkers.is_url(url_formatada):
-                return url_formatada
-            else:
-                print("O URL é inválido. Tente novamente.")
-        except ValueError:
-            print("A URL está desformatada. Tente novamente.")
+            url_validada = str(validators.url(url_input))
+            return url_validada
+        except (ValueError, TypeError):
+            print("A URL é inválida. Tente novamente.")
 
 
 def obter_nome_arquivo() -> str:
@@ -210,7 +207,7 @@ def selecionar_template() -> str:
                 template_validado = template_desejado
                 print(f"\nTemplate '{template_validado}' selecionado!\n")
         except (EOFError, KeyboardInterrupt):
-                        sys.exit("\nPrograma encerrado pelo usuario.")
+            sys.exit("\nPrograma encerrado pelo usuario.")
         else:
             return template_validado
 
@@ -220,10 +217,10 @@ def obter_texto_meme(template_validado: str) -> str:
             texto_meme = input("Qual texto você deseja colocar no template selecionado? ").strip()
             if input(f"\nOk, então você deseja escrever '{texto_meme}' no template {template_validado}? [y/n] ").strip().lower() in ['y', "ye", "yes"]:
                 return texto_meme
-            else:
-                break
-        except EOFError:
-            print("Erro: Entrada inválida. Tente novamente.")
+        except (EOFError, KeyboardInterrupt):
+            sys.exit("\nPrograma encerrado pelo usuario.")
+        else:
+            print("Opcao invalida. Tente novamente.\n")
 
 
 def carregar_template(template_validado: str) -> tuple[int | None, int | None, int | None, str | None, str | None]:
