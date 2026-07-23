@@ -58,11 +58,11 @@ def novo_template():
 
 def obter_url_valida():
     while True:
-        image_url = input("Type the image URL: ")
+        url_input = input("Type the image URL: ")
         try:
-            valid_url = validators.url(image_url)
-            if checkers.is_url(valid_url):
-                return valid_url
+            url_formatada = validators.url(url_input)
+            if checkers.is_url(url_formatada):
+                return url_formatada
             else:
                 print("The URL is invalid. Try again.")
         except ValueError:
@@ -71,16 +71,16 @@ def obter_url_valida():
 
 def obter_nome_arquivo():
     while True:
-        archive_name = input("Type the name for the file: ").strip()
-        if archive_name:
-            return archive_name
+        nome_arquivo = input("Type the name for the file: ").strip()
+        if nome_arquivo:
+            return nome_arquivo
         else:
             print("File name cannot be empty. Try again.")
 
 
-def baixar_imagem(valid_url):
+def baixar_imagem(url_valida):
     try:
-        response = requests.get(valid_url)
+        response = requests.get(url_valida)
         if response.status_code == 200:
             content_type = response.headers.get('Content-Type', '').lower()
             if not content_type.startswith('image/'):
@@ -100,7 +100,7 @@ def obter_configuracoes_texto():
         try:
             x_pos = int(input("Type the X coordinate for text: "))
             y_pos = int(input("Type the Y coordinate for text: "))
-            font_size = int(input("Type the font size for text: "))
+            tamanho_fonte = int(input("Type the font size for text: "))
         except ValueError:
             print("Coordinates and font size must be integers. Try again.")
         else:
@@ -109,7 +109,7 @@ def obter_configuracoes_texto():
     while True:
         cor_input = input("Type the text color (black/white): ").strip().lower()
         try:
-            cor_input = validar_cor(cor_input)
+            cor_validada = validar_cor(cor_input)
             break
         except ValueError:
             print("Invalid color. Please choose either 'black' or 'white'.")
@@ -117,15 +117,15 @@ def obter_configuracoes_texto():
     return {
         "x": x_pos,
         "y": y_pos,
-        "size": font_size,
-        "color": cor_input
+        "size": tamanho_fonte,
+        "color": cor_validada
     }
 
 
 def salvar_imagem(caminho_salvamento, conteudo_imagem):
     try:
-        with open(caminho_salvamento, "wb") as file:
-            file.write(conteudo_imagem)
+        with open(caminho_salvamento, "wb") as meme_novo:
+            meme_novo.write(conteudo_imagem)
         return caminho_salvamento
     except IOError as e:
         print(f"Error saving image: {e}")
@@ -136,33 +136,33 @@ def registrar_template_json(nome_arquivo, caminho_arquivo, configuracoes_texto):
     novo_template_dados = {
         "x": configuracoes_texto["x"],
         "y": configuracoes_texto["y"],
-        "size": configuracoes_texto["size"],
-        "color": configuracoes_texto["color"],
-        "file": caminho_arquivo
+        "tamanho_fonte": configuracoes_texto["tamanho_fonte"],
+        "cor_texto": configuracoes_texto["cor_texto"],
+        "caminho_template": caminho_arquivo
     }
 
     dados_json = {}
     if os.path.exists("templates.json"):
         try:
-            with open("templates.json", "r") as file:
-                dados_json = json.load(file)
+            with open("templates.json", "r") as arquivo_json:
+                dados_json = json.load(arquivo_json)
         except json.JSONDecodeError:
             pass
 
     dados_json[formatar_template_inserido(nome_arquivo)] = novo_template_dados
 
-    with open("templates.json", "w") as file:
-        json.dump(dados_json, file, indent=4)
+    with open("templates.json", "w") as arquivo_json:
+        json.dump(dados_json, arquivo_json, indent=4)
 
 
 def construir_meme():
-    wished_template, text = selecionar_template_texto()
+    template_desejado, texto_meme = selecionar_template_texto()
 
-    x_position, y_position, font_size, text_color, template_file = carregar_template(wished_template)
+    x_position, y_position, tamanho_fonte, cor_texto, template_escolhido = carregar_template(template_desejado)
 
-    if template_file:
-        criar_arquivo_output(template_file, text, font_size, text_color, x_position, y_position)
-        print(f"\n{wished_template} meme successfully created!\n")
+    if template_escolhido:
+        criar_arquivo_output(template_escolhido, texto_meme, tamanho_fonte, cor_texto, x_position, y_position)
+        print(f"\n{template_desejado} meme successfully created!\n")
     else:
         print("Could not create meme due to missing template configurations.")
 
@@ -173,26 +173,27 @@ def selecionar_template_texto():
         os.makedirs(pasta_templates)
 
     arquivos = os.listdir(pasta_templates)
-    available_templates = []
+    templates_disponiveis = []
+
     for arquivo in arquivos:
         if arquivo.lower().endswith(('.jpg', '.jpeg', '.png')):
             nome_sem_extensao = os.path.splitext(arquivo)[0]
             nome_formatado = nome_sem_extensao.replace("_", " ").title()
-            available_templates.append(nome_formatado)
+            templates_disponiveis.append(nome_formatado)
 
-    available_templates.sort()
+    templates_disponiveis.sort()
 
     while True:
         try:
-            print(available_templates)
-            wished_template = input("Which template you wish to use? ")
+            print(templates_disponiveis)
+            template_desejado = input("Which template you wish to use? ")
 
-            if not wished_template.strip().lower().title() in available_templates:
+            if not template_desejado.strip().lower().title() in templates_disponiveis:
                 print("Unavailable template. Select one of the following: ")
                 continue
             else:
-                wished_template = wished_template.strip().lower().title()
-                print(f"\n{wished_template} template selected!\n")
+                template_desejado = template_desejado.strip().lower().title()
+                print(f"\n{template_desejado} template selected!\n")
 
         except EOFError:
             print("Input error. Try again")
@@ -200,70 +201,70 @@ def selecionar_template_texto():
 
         while True:
             try:
-                input_text = input("What text you wish to put into the selected template? ")
-                if input(f"\nOk, so you wish to write '{input_text}' into the {wished_template} template?[y/n] ").strip().lower() in ['y', "ye", "yes"]:
-                    return (wished_template, input_text)
+                texto_meme = input("What text you wish to put into the selected template? ")
+                if input(f"\nOk, so you wish to write '{texto_meme}' into the {template_desejado} template?[y/n] ").strip().lower() in ['y', "ye", "yes"]:
+                    return (template_desejado, texto_meme)
                 else:
                     break
             except EOFError:
                 print("Input error. Try again")
 
 
-def carregar_template(wished_template):
-    chave_template = formatar_template_inserido(wished_template)
-    config_file = "templates.json"
+def carregar_template(template_desejado):
+    chave_template = formatar_template_inserido(template_desejado)
+    caminho_configuracoes = "templates.json"
 
-    if not os.path.exists(config_file):
-        print(f"Error: {config_file} not found.")
+    if not os.path.exists(caminho_configuracoes):
+        print(f"Error: {caminho_configuracoes} not found.")
         return (None, None, None, None, None)
 
     try:
-        with open(config_file, "r") as file:
-            dados = json.load(file)
+        with open(caminho_configuracoes, "r") as arquivo_configuracoes:
+            dados = json.load(arquivo_configuracoes)
             if chave_template in dados:
                 t = dados[chave_template]
                 # Se os templates antigos não tiverem a chave "color", o padrão assume "black"
                 cor = t.get("color", "black")
-                return (t["x"], t["y"], t["size"], cor, t["file"])
+                return (t["x"], t["y"], t["size"], cor, t["caminho_template"])
             else:
-                print(f"Error: '{wished_template}' coordinates not found in JSON file.")
+                print(f"Error: '{template_desejado}' coordinates not found in JSON file.")
     except json.JSONDecodeError:
-        print(f"Error: '{config_file}' is corrupted or poorly formatted.")
+        print(f"Error: '{caminho_configuracoes}' is corrupted or poorly formatted.")
 
     return (None, None, None, None, None)
 
 
-def criar_arquivo_output(template_file, text, font_size, text_color, x_position, y_position):
-    with Image.open(template_file) as img:
-        draw = ImageDraw.Draw(img)
-        font = ImageFont.truetype("ARIALLGT.TTF", size=font_size)
+def criar_arquivo_output(template_escolhido, text, tamanho_fonte, cor_texto, x_position, y_position):
+    with Image.open(template_escolhido) as arquivo_template:
+        draw = ImageDraw.Draw(arquivo_template)
+        font = ImageFont.truetype("ARIALLGT.TTF", size=tamanho_fonte)
 
-        rgb_color = converter_cor_para_rgb(text_color)
+        rgb_color = converter_cor_para_rgb(cor_texto)
         draw.text((x_position, y_position), text, fill=rgb_color, font=font)
 
-        nome_arquivo = os.path.basename(template_file)
+        nome_arquivo = os.path.basename(template_escolhido)
         nome_sem_extensao = os.path.splitext(nome_arquivo)[0]
 
         if not os.path.exists("output"):
             os.makedirs("output")
 
         caminho_salvamento = os.path.join("output", f"{nome_sem_extensao}_meme.jpg")
-        img.save(caminho_salvamento)
+        arquivo_template.save(caminho_salvamento)
 
 
-def validar_cor(color_string):
-    clean_color = color_string.strip().lower()
-    if clean_color not in ["black", "white"]:
+def validar_cor(cor_input):
+    cor_formatada = cor_input.strip().lower()
+    if cor_formatada not in ["black", "white"]:
         raise ValueError("Color must be 'black' or 'white'")
-    return clean_color
+    return cor_formatada
 
 
-def formatar_template_inserido(name_string):
-    return name_string.strip().lower().replace(" ", "_")
+def formatar_template_inserido(template_inserido):
+    return template_inserido.strip().lower().replace(" ", "_")
 
 
-def converter_cor_para_rgb(color_name):
-    if color_name == "white":
+def converter_cor_para_rgb(cor_texto):
+    if cor_texto == "white":
         return (255, 255, 255)
     return (0, 0, 0)
 

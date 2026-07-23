@@ -2,8 +2,8 @@
     "spongebob": {
         "x": 61,
         "y": 114,
-        "size": 16,
-        "color": "black",
-        "file": "templates\\spongebob.jpg"
+        "tamanho_fonte": 16,
+        "cor_texto": "black",
+        "caminho_template": "templates\\spongebob.jpg"
     }
 }
