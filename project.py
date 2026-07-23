@@ -112,6 +112,8 @@ def obter_configuracoes_texto() -> dict[str, int | str] | None:
             tamanho_fonte = int(input("Digite o tamanho da fonte para o texto: "))
         except ValueError:
             print("As coordenadas e o tamanho da fonte devem ser números inteiros. Tente novamente.")
+        except (EOFError, KeyboardInterrupt):
+            sys.exit("\nPrograma encerrado pelo usuario.")
         else:
             break
 
