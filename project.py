@@ -143,7 +143,7 @@ def salvar_imagem(caminho_salvamento: str, conteudo_imagem: bytes) -> str | None
         return None
 
 
-def registrar_template_json(nome_arquivo: str, caminho_arquivo: str, configuracoes_texto: dict) -> None:
+def registrar_template_json(nome_arquivo: str, caminho_arquivo: str, configuracoes_texto: dict[str, int | str]) -> None:
     novo_template_dados = {
         "x": configuracoes_texto["x"],
         "y": configuracoes_texto["y"],
