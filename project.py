@@ -89,7 +89,7 @@ def obter_nome_arquivo() -> str:
 
 def baixar_imagem(url_valida: str) -> bytes | None:
     try:
-        response = requests.get(url_valida)
+        response = requests.get(url_valida, timeout=10)
         if response.status_code == 200:
             content_type = response.headers.get('Content-Type', '').lower()
             if not content_type.startswith('image/'):
