@@ -167,18 +167,21 @@ def registrar_template_json(nome_arquivo: str, caminho_arquivo: str, configuraco
 
 
 def construir_meme() -> None:
-    template_desejado, texto_meme = selecionar_template_texto()
+    # template_desejado, texto_meme = selecionar_template_texto()
 
-    pos_x, pos_y, tamanho_fonte, cor_texto, template_escolhido = carregar_template(template_desejado)
+    template_validado = selecionar_template()
+    texto_meme = obter_texto_meme(template_validado)
+
+    pos_x, pos_y, tamanho_fonte, cor_texto, template_escolhido = carregar_template(template_validado)
 
     if template_escolhido:
         criar_arquivo_output(template_escolhido, texto_meme, tamanho_fonte, cor_texto, pos_x, pos_y)
-        print(f"\nMeme do template {template_desejado} criado com sucesso!\n")
+        print(f"\nMeme do template {template_validado} criado com sucesso!\n")
     else:
         print("Não foi possível criar o meme devido à ausência de configurações de template.")
 
 
-def selecionar_template_texto() -> tuple[str, str]:
+def selecionar_template() -> str:
     pasta_templates = PASTA_TEMPLATES
     if not os.path.exists(pasta_templates):
         os.makedirs(pasta_templates)
@@ -199,31 +202,33 @@ def selecionar_template_texto() -> tuple[str, str]:
     while True:
         try:
             print(templates_disponiveis)
-            template_desejado = input("Qual template você deseja usar? ")
+            template_desejado = input("Qual template você deseja usar? ").strip().lower().title()
 
-            if not template_desejado.strip().lower().title() in templates_disponiveis:
+            if not template_desejado in templates_disponiveis:
                 print("Template indisponível. Selecione um dos seguintes: ")
                 continue
             else:
-                template_desejado = template_desejado.strip().lower().title()
-                print(f"\nTemplate '{template_desejado}' selecionado!\n")
-
+                template_validado = template_desejado
+                print(f"\nTemplate '{template_validado}' selecionado!\n")
         except (EOFError, KeyboardInterrupt):
-            sys.exit("\nPrograma encerrado pelo usuario.")
+                        sys.exit("\nPrograma encerrado pelo usuario.")
+        else:
+            return template_validado
 
-        while True:
-            try:
-                texto_meme = input("Qual texto você deseja colocar no template selecionado? ")
-                if input(f"\nOk, então você deseja escrever '{texto_meme}' no template {template_desejado}? [y/n] ").strip().lower() in ['y', "ye", "yes"]:
-                    return (template_desejado, texto_meme)
-                else:
-                    break
-            except EOFError:
-                print("Erro: Entrada inválida. Tente novamente.")
+def obter_texto_meme(template_validado: str) -> str:
+    while True:
+        try:
+            texto_meme = input("Qual texto você deseja colocar no template selecionado? ").strip()
+            if input(f"\nOk, então você deseja escrever '{texto_meme}' no template {template_validado}? [y/n] ").strip().lower() in ['y', "ye", "yes"]:
+                return texto_meme
+            else:
+                break
+        except EOFError:
+            print("Erro: Entrada inválida. Tente novamente.")
 
 
-def carregar_template(template_desejado: str) -> tuple[int | None, int | None, int | None, str | None, str | None]:
-    chave_template = formatar_template_inserido(template_desejado)
+def carregar_template(template_validado: str) -> tuple[int | None, int | None, int | None, str | None, str | None]:
+    chave_template = formatar_template_inserido(template_validado)
     caminho_configuracoes = ARQUIVO_CONFIG_JSON
 
     if not os.path.exists(caminho_configuracoes):
@@ -239,14 +244,14 @@ def carregar_template(template_desejado: str) -> tuple[int | None, int | None, i
                 cor = t.get("cor_texto", "black")
                 return (t["x"], t["y"], t["tamanho_fonte"], cor, t["caminho_template"])
             else:
-                print(f"Erro: Coordenadas do template '{template_desejado}' não encontradas no arquivo JSON.")
+                print(f"Erro: Coordenadas do template '{template_validado}' não encontradas no arquivo JSON.")
     except json.JSONDecodeError:
         print(f"Erro: '{caminho_configuracoes}' está corrompido ou desformatado.")
 
     return (None, None, None, None, None)
 
 
-def criar_arquivo_output(template_escolhido: str, text: str, tamanho_fonte: int, cor_texto: str, pos_x: int, pos_y: int) -> None:
+def criar_arquivo_output(template_escolhido: str, texto_meme: str, tamanho_fonte: int, cor_texto: str, pos_x: int, pos_y: int) -> None:
     with Image.open(template_escolhido) as arquivo_template:
         draw = ImageDraw.Draw(arquivo_template)
         try:
@@ -256,7 +261,7 @@ def criar_arquivo_output(template_escolhido: str, text: str, tamanho_fonte: int,
             font = ImageFont.load_default()
 
         cor_em_rgb = converter_cor_para_rgb(cor_texto)
-        draw.text((pos_x, pos_y), text, fill=cor_em_rgb, font=font)
+        draw.text((pos_x, pos_y), texto_meme, fill=cor_em_rgb, font=font)
 
         nome_arquivo = os.path.basename(template_escolhido)
         nome_sem_extensao = os.path.splitext(nome_arquivo)[0]
