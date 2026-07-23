@@ -5,6 +5,11 @@ import os
 import requests
 import json
 
+PASTA_TEMPLATES = "templates"
+PASTA_OUTPUT = "output"
+ARQUIVO_CONFIG_JSON = "templates.json"
+FONTE_PADRAO = "ARIALLGT.TTF"
+
 
 def main():
 
@@ -39,7 +44,7 @@ def novo_template():
     url_valida = obter_url_valida()
 
     nome_arquivo = obter_nome_arquivo()
-    caminho_salvamento = os.path.join("templates", f"{nome_arquivo}.jpg")
+    caminho_salvamento = os.path.join(PASTA_TEMPLATES, f"{nome_arquivo}.jpg")
 
     conteudo_imagem = baixar_imagem(url_valida)
     if not conteudo_imagem:
@@ -144,16 +149,16 @@ def registrar_template_json(nome_arquivo, caminho_arquivo, configuracoes_texto):
     }
 
     dados_json = {}
-    if os.path.exists("templates.json"):
+    if os.path.exists(ARQUIVO_CONFIG_JSON):
         try:
-            with open("templates.json", "r") as arquivo_json:
+            with open(ARQUIVO_CONFIG_JSON, "r") as arquivo_json:
                 dados_json = json.load(arquivo_json)
         except json.JSONDecodeError:
             pass
 
     dados_json[formatar_template_inserido(nome_arquivo)] = novo_template_dados
 
-    with open("templates.json", "w") as arquivo_json:
+    with open(ARQUIVO_CONFIG_JSON, "w") as arquivo_json:
         json.dump(dados_json, arquivo_json, indent=4)
 
 
@@ -170,7 +175,7 @@ def construir_meme():
 
 
 def selecionar_template_texto():
-    pasta_templates = "templates"
+    pasta_templates = PASTA_TEMPLATES
     if not os.path.exists(pasta_templates):
         os.makedirs(pasta_templates)
 
@@ -215,7 +220,7 @@ def selecionar_template_texto():
 
 def carregar_template(template_desejado):
     chave_template = formatar_template_inserido(template_desejado)
-    caminho_configuracoes = "templates.json"
+    caminho_configuracoes = ARQUIVO_CONFIG_JSON
 
     if not os.path.exists(caminho_configuracoes):
         print(f"Erro: {caminho_configuracoes} não encontrado.")
@@ -240,7 +245,7 @@ def carregar_template(template_desejado):
 def criar_arquivo_output(template_escolhido, text, tamanho_fonte, cor_texto, x_position, y_position):
     with Image.open(template_escolhido) as arquivo_template:
         draw = ImageDraw.Draw(arquivo_template)
-        font = ImageFont.truetype("ARIALLGT.TTF", size=tamanho_fonte)
+        font = ImageFont.truetype(FONTE_PADRAO, size=tamanho_fonte)
 
         cor_em_rgb = converter_cor_para_rgb(cor_texto)
         draw.text((x_position, y_position), text, fill=cor_em_rgb, font=font)
@@ -248,10 +253,10 @@ def criar_arquivo_output(template_escolhido, text, tamanho_fonte, cor_texto, x_p
         nome_arquivo = os.path.basename(template_escolhido)
         nome_sem_extensao = os.path.splitext(nome_arquivo)[0]
 
-        if not os.path.exists("output"):
-            os.makedirs("output")
+        if not os.path.exists(PASTA_OUTPUT):
+            os.makedirs(PASTA_OUTPUT)
 
-        caminho_salvamento = os.path.join("output", f"{nome_sem_extensao}_meme.jpg")
+        caminho_salvamento = os.path.join(PASTA_OUTPUT, f"{nome_sem_extensao}_meme.jpg")
         arquivo_template.save(caminho_salvamento)
 
 
