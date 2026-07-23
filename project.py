@@ -119,8 +119,8 @@ def obter_configuracoes_texto():
     return {
         "x": x_pos,
         "y": y_pos,
-        "size": tamanho_fonte,
-        "color": cor_validada
+        "tamanho_fonte": tamanho_fonte,
+        "cor_texto": cor_validada
     }
 
 
@@ -226,9 +226,9 @@ def carregar_template(template_desejado):
             dados = json.load(arquivo_configuracoes)
             if chave_template in dados:
                 t = dados[chave_template]
-                # Se os templates antigos não tiverem a chave "color", o padrão assume "black"
-                cor = t.get("color", "black")
-                return (t["x"], t["y"], t["size"], cor, t["caminho_template"])
+                # Se os templates antigos não tiverem a chave "cor_texto", o padrão assume "black"
+                cor = t.get("cor_texto", "black")
+                return (t["x"], t["y"], t["tamanho_fonte"], cor, t["caminho_template"])
             else:
                 print(f"Erro: Coordenadas do template '{template_desejado}' não encontradas no arquivo JSON.")
     except json.JSONDecodeError:
@@ -242,8 +242,8 @@ def criar_arquivo_output(template_escolhido, text, tamanho_fonte, cor_texto, x_p
         draw = ImageDraw.Draw(arquivo_template)
         font = ImageFont.truetype("ARIALLGT.TTF", size=tamanho_fonte)
 
-        rgb_color = converter_cor_para_rgb(cor_texto)
-        draw.text((x_position, y_position), text, fill=rgb_color, font=font)
+        cor_em_rgb = converter_cor_para_rgb(cor_texto)
+        draw.text((x_position, y_position), text, fill=cor_em_rgb, font=font)
 
         nome_arquivo = os.path.basename(template_escolhido)
         nome_sem_extensao = os.path.splitext(nome_arquivo)[0]
