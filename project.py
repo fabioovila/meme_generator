@@ -1,9 +1,11 @@
-from PIL import Image, ImageDraw, ImageFont
-from validator_collection import validators, checkers
 import sys
 import os
-import requests
 import json
+
+
+from PIL import Image, ImageDraw, ImageFont
+import requests
+from validator_collection import validators, checkers
 
 PASTA_TEMPLATES = "templates"
 PASTA_OUTPUT = "output"
