@@ -16,7 +16,7 @@ def main():
         case 2:
             construir_meme()
         case _:
-            print("Invalid option")
+            sys.exit("Error: Invalid option")
 
 
 def get_escolha_usuario():
@@ -29,8 +29,10 @@ def get_escolha_usuario():
                 print("Invalid option.")
                 continue
             return escolha
-        except (ValueError, EOFError):
+        except ValueError:
             print("\nError in choice input. Try again.")
+        except (EOFError, KeyboardInterrupt):
+            sys.exit("\nPrograma encerrado pelo usuario.")
 
 
 def novo_template():
@@ -181,6 +183,8 @@ def selecionar_template_texto():
             nome_formatado = nome_sem_extensao.replace("_", " ").title()
             templates_disponiveis.append(nome_formatado)
 
+    if not templates_disponiveis:
+        sys.exit("Error: Sem templates disponíveis. Adicione um template primeiro.")
     templates_disponiveis.sort()
 
     while True:
@@ -195,9 +199,8 @@ def selecionar_template_texto():
                 template_desejado = template_desejado.strip().lower().title()
                 print(f"\n{template_desejado} template selected!\n")
 
-        except EOFError:
-            print("Input error. Try again")
-            continue
+        except (EOFError, KeyboardInterrupt):
+            sys.exit("\nPrograma encerrado pelo usuario.")
 
         while True:
             try:
