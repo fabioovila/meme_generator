@@ -16,21 +16,21 @@ def main():
         case 2:
             construir_meme()
         case _:
-            sys.exit("Error: Invalid option")
+            sys.exit("Erro: Opção inválida. Programa encerrado.")
 
 
 def get_escolha_usuario():
     while True:
         try:
             print(
-                "\n[1] - Add new img to archive | [2] - Add text to template")
-            escolha = int(input("Which option do you want? "))
+                "\n[1] - Criar novo template para memes | [2] - Criar novo meme")
+            escolha = int(input("Qual função deseja utilizar? "))
             if escolha not in [1, 2]:
-                print("Invalid option.")
+                print("Opção inválida.")
                 continue
             return escolha
         except ValueError:
-            print("\nError in choice input. Try again.")
+            print("\nErro: Entrada inválida. Digite um número inteiro (1 ou 2).")
         except (EOFError, KeyboardInterrupt):
             sys.exit("\nPrograma encerrado pelo usuario.")
 
@@ -60,24 +60,24 @@ def novo_template():
 
 def obter_url_valida():
     while True:
-        url_input = input("Type the image URL: ")
+        url_input = input("Digite o URL da imagem que deseja usar como template: ")
         try:
             url_formatada = validators.url(url_input)
             if checkers.is_url(url_formatada):
                 return url_formatada
             else:
-                print("The URL is invalid. Try again.")
+                print("O URL é inválido. Tente novamente.")
         except ValueError:
-            print("The URL is malformed. Try again.")
+            print("A URL está desformatada. Tente novamente.")
 
 
 def obter_nome_arquivo():
     while True:
-        nome_arquivo = input("Type the name for the file: ").strip()
+        nome_arquivo = input("Digite o nome desejado para o novo arquivo: ").strip()
         if nome_arquivo:
             return nome_arquivo
         else:
-            print("File name cannot be empty. Try again.")
+            print("O nome do arquivo não pode estar vazio. Tente novamente.")
 
 
 def baixar_imagem(url_valida):
@@ -86,35 +86,35 @@ def baixar_imagem(url_valida):
         if response.status_code == 200:
             content_type = response.headers.get('Content-Type', '').lower()
             if not content_type.startswith('image/'):
-                print(f"Error: The provided URL does not point to a valid image. (Type: {content_type})")
+                print(f"Erro: A URL fornecida não aponta para uma imagem válida. (Tipo: {content_type})")
                 return None
             return response.content
         else:
-            print(f"Failed to retrieve image. Status code: {response.status_code}")
+            print(f"Erro: Falha ao recuperar a imagem. Código de status: {response.status_code}")
             return None
     except requests.RequestException:
-        print("An error occurred while connecting to the URL.")
+        print("Erro: Ocorreu um erro ao conectar-se à URL.")
         return None
 
 
 def obter_configuracoes_texto():
     while True:
         try:
-            x_pos = int(input("Type the X coordinate for text: "))
-            y_pos = int(input("Type the Y coordinate for text: "))
-            tamanho_fonte = int(input("Type the font size for text: "))
+            x_pos = int(input("Digite a coordenada X para o texto: "))
+            y_pos = int(input("Digite a coordenada Y para o texto: "))
+            tamanho_fonte = int(input("Digite o tamanho da fonte para o texto: "))
         except ValueError:
-            print("Coordinates and font size must be integers. Try again.")
+            print("As coordenadas e o tamanho da fonte devem ser números inteiros. Tente novamente.")
         else:
             break
 
     while True:
-        cor_input = input("Type the text color (black/white): ").strip().lower()
+        cor_input = input("Digite a cor do texto (black/white): ").strip().lower()
         try:
             cor_validada = validar_cor(cor_input)
             break
         except ValueError:
-            print("Invalid color. Please choose either 'black' or 'white'.")
+            print("Cor inválida. Por favor, escolha entre 'black' ou 'white'.")
 
     return {
         "x": x_pos,
@@ -130,7 +130,7 @@ def salvar_imagem(caminho_salvamento, conteudo_imagem):
             meme_novo.write(conteudo_imagem)
         return caminho_salvamento
     except IOError as e:
-        print(f"Error saving image: {e}")
+        print(f"Erro ao salvar imagem: {e}")
         return None
 
 
@@ -164,9 +164,9 @@ def construir_meme():
 
     if template_escolhido:
         criar_arquivo_output(template_escolhido, texto_meme, tamanho_fonte, cor_texto, x_position, y_position)
-        print(f"\n{template_desejado} meme successfully created!\n")
+        print(f"\nMeme do template {template_desejado} criado com sucesso!\n")
     else:
-        print("Could not create meme due to missing template configurations.")
+        print("Não foi possível criar o meme devido à ausência de configurações de template.")
 
 
 def selecionar_template_texto():
@@ -184,33 +184,33 @@ def selecionar_template_texto():
             templates_disponiveis.append(nome_formatado)
 
     if not templates_disponiveis:
-        sys.exit("Error: Sem templates disponíveis. Adicione um template primeiro.")
+        sys.exit("Erro: Sem templates disponíveis. Adicione um template primeiro.")
     templates_disponiveis.sort()
 
     while True:
         try:
             print(templates_disponiveis)
-            template_desejado = input("Which template you wish to use? ")
+            template_desejado = input("Qual template você deseja usar? ")
 
             if not template_desejado.strip().lower().title() in templates_disponiveis:
-                print("Unavailable template. Select one of the following: ")
+                print("Template indisponível. Selecione um dos seguintes: ")
                 continue
             else:
                 template_desejado = template_desejado.strip().lower().title()
-                print(f"\n{template_desejado} template selected!\n")
+                print(f"\nTemplate '{template_desejado}' selecionado!\n")
 
         except (EOFError, KeyboardInterrupt):
             sys.exit("\nPrograma encerrado pelo usuario.")
 
         while True:
             try:
-                texto_meme = input("What text you wish to put into the selected template? ")
-                if input(f"\nOk, so you wish to write '{texto_meme}' into the {template_desejado} template?[y/n] ").strip().lower() in ['y', "ye", "yes"]:
+                texto_meme = input("Qual texto você deseja colocar no template selecionado? ")
+                if input(f"\nOk, então você deseja escrever '{texto_meme}' no template {template_desejado}? [y/n] ").strip().lower() in ['y', "ye", "yes"]:
                     return (template_desejado, texto_meme)
                 else:
                     break
             except EOFError:
-                print("Input error. Try again")
+                print("Erro: Entrada inválida. Tente novamente.")
 
 
 def carregar_template(template_desejado):
@@ -218,7 +218,7 @@ def carregar_template(template_desejado):
     caminho_configuracoes = "templates.json"
 
     if not os.path.exists(caminho_configuracoes):
-        print(f"Error: {caminho_configuracoes} not found.")
+        print(f"Erro: {caminho_configuracoes} não encontrado.")
         return (None, None, None, None, None)
 
     try:
@@ -230,9 +230,9 @@ def carregar_template(template_desejado):
                 cor = t.get("color", "black")
                 return (t["x"], t["y"], t["size"], cor, t["caminho_template"])
             else:
-                print(f"Error: '{template_desejado}' coordinates not found in JSON file.")
+                print(f"Erro: Coordenadas do template '{template_desejado}' não encontradas no arquivo JSON.")
     except json.JSONDecodeError:
-        print(f"Error: '{caminho_configuracoes}' is corrupted or poorly formatted.")
+        print(f"Erro: '{caminho_configuracoes}' está corrompido ou desformatado.")
 
     return (None, None, None, None, None)
 
@@ -258,7 +258,7 @@ def criar_arquivo_output(template_escolhido, text, tamanho_fonte, cor_texto, x_p
 def validar_cor(cor_input):
     cor_formatada = cor_input.strip().lower()
     if cor_formatada not in ["black", "white"]:
-        raise ValueError("Color must be 'black' or 'white'")
+        raise ValueError("A cor deve ser 'black' ou 'white'")
     return cor_formatada
 
 
