@@ -8,32 +8,32 @@ import json
 
 def main():
 
-    user_response = menu()
+    escolha_usuario = get_escolha_usuario()
 
-    match user_response:
+    match escolha_usuario:
         case 1:
-            get_new_img()
+            novo_template()
         case 2:
-            add_text_to_img()
+            construir_meme()
         case _:
             print("Invalid option")
 
 
-def menu():
+def get_escolha_usuario():
     while True:
         try:
             print(
                 "\n[1] - Add new img to archive | [2] - Add text to template")
-            response = int(input("Which option do you want? "))
-            if response not in [1, 2]:
+            escolha = int(input("Which option do you want? "))
+            if escolha not in [1, 2]:
                 print("Invalid option.")
                 continue
-            return response
+            return escolha
         except (ValueError, EOFError):
             print("\nError in choice input. Try again.")
 
 
-def get_new_img():
+def novo_template():
     while True:
         image_url = input("Type the image URL: ")
         try:
@@ -105,7 +105,7 @@ def get_new_img():
     except requests.RequestException:
         print("An error occurred while connecting to the URL.")
 
-def add_text_to_img():
+def construir_meme():
     wished_template, text = get_user_input()
 
     x_position, y_position, font_size, text_color, template_file = text_placement(
