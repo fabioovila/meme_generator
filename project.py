@@ -34,83 +34,131 @@ def get_escolha_usuario():
 
 
 def novo_template():
+    url_valida = obter_url_valida()
+
+    nome_arquivo = obter_nome_arquivo()
+    caminho_salvamento = os.path.join("templates", f"{nome_arquivo}.jpg")
+
+    conteudo_imagem = baixar_imagem(url_valida)
+    if not conteudo_imagem:
+        return
+    
+    configuracoes_texto = obter_configuracoes_texto()
+    if not configuracoes_texto:
+        return
+    
+    caminho_arquivo = salvar_imagem(caminho_salvamento, conteudo_imagem)
+    if not caminho_arquivo:
+        return
+    
+    registrar_template_json(nome_arquivo, caminho_arquivo, configuracoes_texto)
+
+    print(f"Template '{nome_arquivo}' configurado com sucesso.")
+
+
+def obter_url_valida():
     while True:
         image_url = input("Type the image URL: ")
         try:
             valid_url = validators.url(image_url)
             if checkers.is_url(valid_url):
-                break
+                return valid_url
             else:
                 print("The URL is invalid. Try again.")
         except ValueError:
             print("The URL is malformed. Try again.")
 
-    archive_name = input("Type the name to the file: ").strip()
-    caminho_salvamento = os.path.join("templates", f"{archive_name}.jpg")
 
+def obter_nome_arquivo():
+    while True:
+        archive_name = input("Type the name for the file: ").strip()
+        if archive_name:
+            return archive_name
+        else:
+            print("File name cannot be empty. Try again.")
+
+
+def baixar_imagem(valid_url):
     try:
         response = requests.get(valid_url)
         if response.status_code == 200:
             content_type = response.headers.get('Content-Type', '').lower()
             if not content_type.startswith('image/'):
-                sys.exit(
-                    f"Error: The provided URL does not point to a valid image. (Type: {content_type})")
-                return
-            else:
-                while True:
-                    try:
-                        x_pos = int(input("Type the X coordinate for text: "))
-                        y_pos = int(input("Type the Y coordinate for text: "))
-                        font_size = int(input("Type the font size for text: "))
-                        break
-                    except ValueError:
-                        print("Coordinates and font size must be integers. Try again.")
-
-                while True:
-                    cor_input = input("Type the text color (black/white): ").strip().lower()
-                    try:
-                        cor_input = validar_cor(cor_input)
-                        break
-                    except ValueError:
-                        print("Invalid color. Please choose either 'black' or 'white'.")
-
-            with open(caminho_salvamento, "wb") as file:
-                file.write(response.content)
-
-            chave_json = formatar_template_inserido(archive_name)
-            novo_template_dados = {
-                "x": x_pos,
-                "y": y_pos,
-                "size": font_size,
-                "color": cor_input,
-                "file": caminho_salvamento
-            }
-
-            dados_json = {}
-            if os.path.exists("templates.json"):
-                try:
-                    with open("templates.json", "r") as file:
-                        dados_json = json.load(file)
-                except json.JSONDecodeError:
-                    pass
-
-            dados_json[chave_json] = novo_template_dados
-
-            with open("templates.json", "w") as file:
-                json.dump(dados_json, file, indent=4)
-
-            print(f"Template '{archive_name}' successfully added and configured!")
+                print(f"Error: The provided URL does not point to a valid image. (Type: {content_type})")
+                return None
+            return response.content
         else:
             print(f"Failed to retrieve image. Status code: {response.status_code}")
+            return None
     except requests.RequestException:
         print("An error occurred while connecting to the URL.")
+        return None
+
+
+def obter_configuracoes_texto():
+    while True:
+        try:
+            x_pos = int(input("Type the X coordinate for text: "))
+            y_pos = int(input("Type the Y coordinate for text: "))
+            font_size = int(input("Type the font size for text: "))
+        except ValueError:
+            print("Coordinates and font size must be integers. Try again.")
+        else:
+            break
+
+    while True:
+        cor_input = input("Type the text color (black/white): ").strip().lower()
+        try:
+            cor_input = validar_cor(cor_input)
+            break
+        except ValueError:
+            print("Invalid color. Please choose either 'black' or 'white'.")
+
+    return {
+        "x": x_pos,
+        "y": y_pos,
+        "size": font_size,
+        "color": cor_input
+    }
+
+
+def salvar_imagem(caminho_salvamento, conteudo_imagem):
+    try:
+        with open(caminho_salvamento, "wb") as file:
+            file.write(conteudo_imagem)
+        return caminho_salvamento
+    except IOError as e:
+        print(f"Error saving image: {e}")
+        return None
+
+
+def registrar_template_json(nome_arquivo, caminho_arquivo, configuracoes_texto):
+    novo_template_dados = {
+        "x": configuracoes_texto["x"],
+        "y": configuracoes_texto["y"],
+        "size": configuracoes_texto["size"],
+        "color": configuracoes_texto["color"],
+        "file": caminho_arquivo
+    }
+
+    dados_json = {}
+    if os.path.exists("templates.json"):
+        try:
+            with open("templates.json", "r") as file:
+                dados_json = json.load(file)
+        except json.JSONDecodeError:
+            pass
+
+    dados_json[formatar_template_inserido(nome_arquivo)] = novo_template_dados
+
+    with open("templates.json", "w") as file:
+        json.dump(dados_json, file, indent=4)
 
 
 def construir_meme():
     wished_template, text = selecionar_template_texto()
 
-    x_position, y_position, font_size, text_color, template_file = carregar_template(
-        wished_template)
+    x_position, y_position, font_size, text_color, template_file = carregar_template(wished_template)
 
     if template_file:
         criar_arquivo_output(template_file, text, font_size, text_color, x_position, y_position)
