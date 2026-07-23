@@ -182,11 +182,10 @@ def construir_meme() -> None:
 
 
 def selecionar_template() -> str:
-    pasta_templates = PASTA_TEMPLATES
-    if not os.path.exists(pasta_templates):
-        os.makedirs(pasta_templates)
+    if not os.path.exists(PASTA_TEMPLATES):
+        os.makedirs(PASTA_TEMPLATES)
 
-    arquivos = os.listdir(pasta_templates)
+    arquivos = os.listdir(PASTA_TEMPLATES)
     templates_disponiveis = []
 
     for arquivo in arquivos:
@@ -229,15 +228,14 @@ def obter_texto_meme(template_validado: str) -> str:
 
 def carregar_template(template_validado: str) -> tuple[int | None, int | None, int | None, str | None, str | None]:
     chave_template = formatar_template_inserido(template_validado)
-    caminho_configuracoes = ARQUIVO_CONFIG_JSON
 
-    if not os.path.exists(caminho_configuracoes):
-        print(f"Erro: {caminho_configuracoes} não encontrado.")
+    if not os.path.exists(ARQUIVO_CONFIG_JSON):
+        print(f"Erro: {ARQUIVO_CONFIG_JSON} não encontrado.")
         return (None, None, None, None, None)
 
     try:
-        with open(caminho_configuracoes, "r") as arquivo_configuracoes:
-            dados = json.load(arquivo_configuracoes)
+        with open(ARQUIVO_CONFIG_JSON, "r") as configs:
+            dados = json.load(configs)
             if chave_template in dados:
                 t = dados[chave_template]
                 # Se os templates antigos não tiverem a chave "cor_texto", o padrão assume "black"
@@ -246,7 +244,7 @@ def carregar_template(template_validado: str) -> tuple[int | None, int | None, i
             else:
                 print(f"Erro: Coordenadas do template '{template_validado}' não encontradas no arquivo JSON.")
     except json.JSONDecodeError:
-        print(f"Erro: '{caminho_configuracoes}' está corrompido ou desformatado.")
+        print(f"Erro: '{ARQUIVO_CONFIG_JSON}' está corrompido ou desformatado.")
 
     return (None, None, None, None, None)
 
