@@ -1,65 +1,9 @@
 {
-    "mind": {
-        "x": 168,
-        "y": 205,
-        "size": 24,
-        "color": "black",
-        "file": "templates/mind.jpg"
-    },
     "spongebob": {
         "x": 61,
         "y": 114,
         "size": 16,
         "color": "black",
-        "file": "templates/spongebob.jpg"
-    },
-    "hard_truth": {
-        "x": 300,
-        "y": 375,
-        "size": 20,
-        "color": "black",
-        "file": "templates/hard_truth.jpg"
-    },
-    "scared_taylor": {
-        "x": 150,
-        "y": 550,
-        "size": 30,
-        "color": "black",
-        "file": "templates/scared_taylor.jpg"
-    },
-    "supportive_taylor": {
-        "x": 130,
-        "y": 350,
-        "size": 20,
-        "color": "black",
-        "file": "templates/supportive_taylor.jpg"
-    },
-    "taylor_bunduda": {
-        "x": 200,
-        "y": 50,
-        "size": 40,
-        "color": "white",
-        "file": "templates/taylor_bunduda.jpg"
-    },
-    "blogs": {
-        "x": 120,
-        "y": 475,
-        "size": 40,
-        "color": "black",
-        "file": "templates/blogs.jpg"
-    },
-    "dog_on_fire": {
-        "x": 65,
-        "y": 65,
-        "size": 20,
-        "color": "white",
-        "file": "templates/dog_on_fire.jpg"
-    },
-    "sad_frog": {
-        "x": 180,
-        "y": 50,
-        "size": 60,
-        "color": "black",
-        "file": "templates/sad_frog.jpg"
+        "file": "templates\\spongebob.jpg"
     }
 }
